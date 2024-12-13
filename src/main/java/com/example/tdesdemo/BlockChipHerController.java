@@ -11,10 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,9 +31,10 @@ public class BlockChipHerController {
             @RequestBody BlockChipHerDto dto
     ) {
         try {
-            var result = blockChipHerUtil.encryptingString(dto.getMessage());
+            var secretKey = blockChipHerUtil.generateSecretKey();
+            var result = blockChipHerUtil.encryptingString(secretKey, dto.getMessage());
             return response(HttpStatus.OK, result);
-        } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidAlgorithmParameterException |
+        } catch (NoSuchPaddingException | NoSuchAlgorithmException |
                  InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
             return response(HttpStatus.BAD_REQUEST, e.getMessage());
         } catch (Exception e) {
@@ -48,9 +47,10 @@ public class BlockChipHerController {
             @RequestBody BlockChipHerDto dto
     ) {
         try {
-            var result = blockChipHerUtil.decryptingString(dto.getMessage());
+            var secretKey = blockChipHerUtil.generateSecretKey();
+            var result = blockChipHerUtil.decryptingString(secretKey, dto.getMessage());
             return response(HttpStatus.OK, result);
-        } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidAlgorithmParameterException |
+        } catch (NoSuchPaddingException | NoSuchAlgorithmException |
                  InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
             return response(HttpStatus.BAD_REQUEST, e.getMessage());
         } catch (Exception e) {

@@ -7,14 +7,14 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class BlockChipHerConfig {
 
-    @Value("${spring.tdes.secret.key}")
-    private String secretKey;
+    @Value("${spring.crypto.desede.key.part.one}")
+    private String keyPartOne;
 
-    @Value("${spring.tdes.vector.key}")
-    private String vectorKey;
+    @Value("${spring.crypto.desede.key.part.one}")
+    private String keyPartTwo;
 
     @Bean
     public BlockChipHerUtil blockChipHerUtil() {
-        return new BlockChipHerUtil(secretKey, vectorKey);
+        return new BlockChipHerUtil(keyPartOne, keyPartTwo);
     }
 }
