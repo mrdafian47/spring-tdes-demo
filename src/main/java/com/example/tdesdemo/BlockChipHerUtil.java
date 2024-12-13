@@ -1,20 +1,19 @@
 package com.example.tdesdemo;
 
 import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 import javax.crypto.*;
 import javax.crypto.spec.DESedeKeySpec;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
-import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Base64;
 
 public class BlockChipHerUtil {
+
+    private static final String SECRET_KEY_NOT_ALLOW_EMPTY = "SecretKey not allow empty";
 
     private static final String ALGORITHM = "DESede";
 
@@ -38,9 +37,13 @@ public class BlockChipHerUtil {
     }
 
     public String encryptingString(
-            @NonNull SecretKey secretKey,
+            @Nullable SecretKey secretKey,
             @NonNull String rawMessage
     ) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+        if (secretKey == null) {
+            throw new NullPointerException(SECRET_KEY_NOT_ALLOW_EMPTY);
+        }
+
         final Cipher cipher = Cipher.getInstance(ALGORITHM);
         cipher.init(Cipher.ENCRYPT_MODE, secretKey);
         final byte[] encryptedData = cipher.doFinal(rawMessage.getBytes(StandardCharsets.UTF_8));
@@ -48,9 +51,13 @@ public class BlockChipHerUtil {
     }
 
     public String decryptingString(
-            @NonNull SecretKey secretKey,
+            @Nullable SecretKey secretKey,
             @NonNull String decodedMessage
     ) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+        if (secretKey == null) {
+            throw new NullPointerException(SECRET_KEY_NOT_ALLOW_EMPTY);
+        }
+
         final Cipher cipher = Cipher.getInstance(ALGORITHM);
         cipher.init(Cipher.DECRYPT_MODE, secretKey);
         final byte[] decodedData = Base64.getDecoder().decode(decodedMessage);
